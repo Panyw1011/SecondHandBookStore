@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.book.dao.BookInfoDao">
+
+    <select id="getBookList" resultType="com.book.pojo.BookInfo">
+        select b.bookId,b.bookName,b.bookLevel,b.bookPrice,s.bookSort,b.bookCount,b.bookAuthor,b.bookPublisher,b.display,b.bookSales,u.userName
+        from bookinfo b,userinfo u, booksort s where 1=1
+        <if test="bookId!=null and bookId!=0">
+            and bookId = #{bookId}
+        </if>
+        <if test="bookName!=null and bookName!=''">
+            and bookName like concat('%',#{bookName},'%')
+        </if>
+        <if test="bookSort!=null and bookSort!=''">
+            and s.bookSort like concat('%',#{bookSort},'%')
+        </if>
+        <if test="bookAuthor!=null and bookAuthor!=''">
+            and bookAuthor like concat('%',#{bookAuthor},'%')
+        </if>
+        <if test="bookPublisher!=null and bookPublisher!=''">
+            and bookPublisher like concat('%',#{bookPublisher},'%')
+        </if>
+        <if test="userName!=null and userName!=''">
+            and u.userName like concat('%',#{userName},'%')
+        </if>
+        and b.userId = u.userId and b.bookSortId = s.bookSortId
+    </select>
+    <select id="getCount" resultType="Integer">
+        select count(*)
+        from bookinfo b,userinfo u, booksort s where 1=1
+        <if test="bookId!=null and bookId!=0">
+            and bookId = #{bookId}
+        </if>
+        <if test="bookName!=null and bookName!=''">
+            and bookName like concat('%',#{bookName},'%')
+        </if>
+        <if test="bookSort!=null and bookSort!=''">
+            and s.bookSort like concat('%',#{bookSort},'%')
+        </if>
+        <if test="bookAuthor!=null and bookAuthor!=''">
+            and bookAuthor like concat('%',#{bookAuthor},'%')
+        </if>
+        <if test="bookPublisher!=null and bookPublisher!=''">
+            and bookPublisher like concat('%',#{bookPublisher},'%')
+        </if>
+        <if test="userName!=null and userName!=''">
+            and u.userName like concat('%',#{userName},'%')
+        </if>
+        and b.userId = u.userId and b.bookSortId = s.bookSortId
+    </select>
+    <insert id="addBook" parameterType="com.book.pojo.BookInfo">
+        insert into bookinfo(bookId,bookName, bookLevel, bookPrice, bookSortId, bookCount, bookAuthor, bookPublisher, display, bookSales, userId)
+        values(#{bookId},#{bookName},#{bookLevel},#{bookPrice},
+        (select bookSortId from booksort where bookSort = #{bookSort}),
+        #{bookCount},#{bookAuthor},#{bookPublisher},#{display},#{bookSales},
+        (select userId from userinfo where userName=#{userName}))
+    </insert>
+    <delete id="deleteBook" parameterType="Integer">
+        delete from bookinfo where bookId = #{bookId}
+    </delete>
+    <select id="findBookById" resultType="com.book.pojo.BookInfo" parameterType="Integer">
+        select b.bookId,b.bookName,b.bookLevel,b.bookPrice,s.bookSort,b.bookCount,b.bookAuthor,b.bookPublisher,b.display,b.bookSales,u.userName
+        from bookinfo b,userinfo u, booksort s
+        where bookId = #{bookId} and b.userId = u.userId and b.bookSortId = s.bookSortId
+    </select>
+    <update id="updateBook" parameterType="com.book.pojo.BookInfo">
+        update bookinfo
+        <set>
+            <if test="bookName!=null and bookName!=''">
+                bookName = #{bookName},
+            </if>
+            <if test="bookLevel!=null and bookLevel!=0">
+                bookLevel = #{bookLevel},
+            </if>
+            <if test="bookPrice!=null and bookPrice!=''">
+                bookPrice = #{bookPrice},
+            </if>
+            <if test="bookSort!=null and bookSort!=''">
+                bookSortId = (select bookSortId from booksort where bookSort = #{bookSort}),
+            </if>
+            <if test="bookCount!=null and bookCount!=0">
+                bookCount = #{bookCount},
+            </if>
+            <if test="bookAuthor!=null and bookAuthor!=''">
+                bookAuthor = #{bookAuthor},
+            </if>
+            <if test="bookPublisher!=null and bookPublisher!=''">
+                bookPublisher = #{bookPublisher},
+            </if>
+            <if test="display!=null and display!=''">
+                display = #{display},
+            </if>
+            <if test="bookSales!=null and bookSales!=0">
+                bookSales = #{bookSales},
+            </if>
+        </set>
+        where bookId = #{bookId}
+    </update>
+    <delete id="deleteSelectedBook">
+        delete from bookinfo where bookId in (${ck})
+    </delete>
+    <select id="getBookListByName" resultType="com.book.pojo.BookInfo">
+        select b.bookId,b.bookName,b.bookLevel,b.bookPrice,s.bookSort,b.bookCount,b.bookAuthor,b.bookPublisher,b.display,b.bookSales,u.userName
+        from bookinfo b,userinfo u, booksort s where 1=1
+        <if test="userName!=null and userName!=''">
+            and u.userName =#{userName}
+        </if>
+        and b.userId = u.userId and b.bookSortId = s.bookSortId
+    </select>
+    <update id="displayBook">
+        update bookinfo set display = '是' where bookId = #{bookId}
+    </update>
+</mapper>

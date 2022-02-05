@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.book.dao.OrderDao">
+
+    <insert id="buySelected">
+        insert into orderlist(userId, bookId, orderTime)
+          select userId as userId,bookId as bookId,now() as orderTime
+          from shoppingcart
+          where cartId in (${ck})
+    </insert>
+    <select id="getOrderById" resultType="com.book.pojo.Order">
+        select list.orderId,list.userId,info.bookName,u.userName,img.url,info.bookPrice,list.orderTime
+        from orderlist list,bookimage img,bookinfo info ,userinfo u
+        where list.bookId = info.bookId and list.bookId = img.bookId and info.userId = u.userId and list.userId = #{userId}
+    </select>
+    <update id="addSale">
+        update bookinfo set bookSales = bookSales+1 where bookId in (${ck})
+    </update>
+</mapper>

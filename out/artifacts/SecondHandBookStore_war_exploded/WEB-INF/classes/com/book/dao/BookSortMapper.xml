@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.book.dao.BookSortDao">
+
+    <select id="getBookSort" resultType="String">
+        select bookSort from booksort
+    </select>
+    <select id="getSortList" resultType="com.book.pojo.BookSort">
+        select * from booksort  where 1=1
+        <if test="bookSort!=null and bookSort!=''">
+            and bookSort like concat('%',#{bookSort},'%')
+        </if>
+    </select>
+    <insert id="addSort" parameterType="com.book.pojo.BookSort">
+        insert into booksort (bookSort, note)
+        values(#{bookSort},#{note})
+    </insert>
+    <delete id="deleteSort" parameterType="Integer">
+        delete from booksort where bookSortId = #{bookSortId}
+    </delete>
+    <select id="findSortById" resultType="com.book.pojo.BookSort" parameterType="Integer">
+        select * from booksort where bookSortId = #{bookSortId}
+    </select>
+    <update id="updateSort" parameterType="com.book.pojo.BookSort">
+        update booksort
+        <set>
+            <if test="bookSort!=null and bookSort!=''">
+                bookSort = #{bookSort},
+            </if>
+            <if test="note!=null and note!=''">
+                note = #{note},
+            </if>
+        </set>
+        where bookSortId = #{bookSortId}
+    </update>
+    <delete id="deleteSelectedSort">
+        delete from booksort where bookSortId in (${ck})
+    </delete>
+    <select id="getCount" resultType="Integer">
+        select count(*) from booksort  where 1=1
+        <if test="bookSort!=null and bookSort!=''">
+            and bookSort like concat('%',#{bookSort},'%')
+        </if>
+    </select>
+    <select id="getSortSales" resultType="map">
+        select s.bookSort ,sum(i.bookSales) as bookSalesSum from bookinfo i,booksort s where i.bookSortId = s.bookSortId
+        group by s.bookSortId
+    </select>
+</mapper>

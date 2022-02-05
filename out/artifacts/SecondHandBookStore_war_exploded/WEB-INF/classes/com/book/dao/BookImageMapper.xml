@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.book.dao.BookImageDao">
+    <select id="getBookImage" resultType="com.book.pojo.BookImage">
+        select info.bookId,info.bookName,info.bookPrice,info.bookAuthor,info.bookSales,img.url
+        from bookinfo info,bookimage img
+        where info.bookId = img.bookId and display = '否'order by info.bookSales desc limit 5
+    </select>
+    <select id="getAllBookImage" resultType="com.book.pojo.BookImage">
+        select info.bookId,info.bookName,info.bookPrice,info.bookAuthor,info.bookSales,img.url
+        from bookinfo info,bookimage img
+        where info.bookId = img.bookId and display = '否'
+        <if test="bookSortId!=null and bookSortId!=0">
+            and info.bookSortId = #{bookSortId}
+        </if>
+        order by info.bookSales desc
+    </select>
+    <select id="searchBookImage" resultType="com.book.pojo.BookImage">
+        select info.bookId,info.bookName,info.bookPrice,info.bookAuthor,info.bookSales,img.url
+        from bookinfo info,bookimage img
+        where info.bookId = img.bookId and display = '否'
+        <if test="searchBook!=null and searchBook!=''">
+            and (info.bookName like concat('%',#{searchBook},'%')
+            or
+            info.bookAuthor like concat('%',#{searchBook},'%'))
+        </if>
+        order by info.bookSales desc
+    </select>
+    <select id="getBookImageById" resultType="com.book.pojo.BookImage">
+        select * from bookimage where bookId = #{bookId}
+    </select>
+    <select id="getSimilarBookImage" resultType="com.book.pojo.BookImage">
+        select info.bookId,info.bookName,info.bookPrice,info.bookAuthor,info.bookSales,img.url
+        from bookinfo info,bookimage img,booksort sort
+        where info.bookId = img.bookId and sort.bookSort = #{bookSort} and sort.bookSortId = info.bookSortId and display = '否'
+        order by info.bookSales desc limit 5
+    </select>
+    <insert id="addBookPic">
+        insert into bookimage(bookId, url) values(#{bookId},#{path})
+    </insert>
+</mapper>

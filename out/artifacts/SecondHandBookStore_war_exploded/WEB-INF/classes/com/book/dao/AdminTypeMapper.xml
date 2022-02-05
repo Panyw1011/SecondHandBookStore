@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.book.dao.AdminTypeDao">
+
+    <select id="getAdminType" resultType="String">
+        select typeName from admintype
+    </select>
+    <select id="getTypeList" resultType="com.book.pojo.AdminType">
+        select * from admintype where 1=1
+        <if test="typeName!=null and typeName!=''">
+            and typeName like concat('%',#{typeName},'%')
+        </if>
+    </select>
+    <select id="getCount" resultType="Integer">
+        select count(*) from admintype  where 1=1
+        <if test="typeName!=null and typeName!=''">
+            and typeName like concat('%',#{typeName},'%')
+        </if>
+    </select>
+    <insert id="addType" parameterType="com.book.pojo.AdminType">
+        insert into admintype (typeName, note)
+        values(#{typeName},#{note})
+    </insert>
+    <delete id="deleteType" parameterType="Integer">
+        delete from admintype where adminTypeId = #{adminTypeId}
+    </delete>
+    <select id="findTypeById" resultType="com.book.pojo.AdminType" parameterType="Integer">
+        select * from admintype where adminTypeId = #{adminTypeId}
+    </select>
+    <update id="updateType" parameterType="com.book.pojo.AdminType">
+        update admintype
+        <set>
+            <if test="typeName!=null and typeName!=''">
+                typeName = #{typeName},
+            </if>
+            <if test="note!=null and note!=''">
+                note = #{note},
+            </if>
+        </set>
+        where adminTypeId = #{adminTypeId}
+    </update>
+    <select id="getCurrentAdminType" resultType="Integer">
+        select adminTypeId from admininfo where adminId = #{adminId}
+    </select>
+</mapper>

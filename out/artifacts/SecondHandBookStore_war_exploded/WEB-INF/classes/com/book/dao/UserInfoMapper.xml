@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.book.dao.UserInfoDao">
+
+    <select id="getUserList" resultType="com.book.pojo.UserInfo">
+        select * from userinfo  where 1=1
+        <if test="userName!=null and userName!=''">
+            and userName like concat('%',#{userName},'%')
+        </if>
+        <if test="userPhone!=null and userPhone!=''">
+            and userPhone like concat('%',#{userPhone},'%')
+        </if>
+    </select>
+    <insert id="addUser" parameterType="com.book.pojo.UserInfo">
+        insert into userinfo (userName, userPhone, userCreateTime, userSex, userAge)
+        values(#{userName},#{userPhone},now(), #{userSex}, #{userAge})
+    </insert>
+    <delete id="deleteUser" parameterType="Integer">
+        delete from userinfo where userId = #{userId}
+    </delete>
+    <select id="findUserById" resultType="com.book.pojo.UserInfo" parameterType="Integer">
+        select * from userinfo where userId = #{userId}
+    </select>
+    <update id="updateUser" parameterType="com.book.pojo.UserInfo">
+        update userinfo
+        <set>
+            <if test="userName!=null and userName!=''">
+                userName = #{userName},
+            </if>
+            <if test="userSex!=null and userSex!=''">
+                userSex = #{userSex},
+            </if>
+            <if test="userPhone!=null and userPhone!=''">
+                userPhone = #{userPhone},
+            </if>
+            <if test="userAge!=null and userAge!=0">
+                userAge = #{userAge},
+            </if>
+
+        </set>
+        where userId = #{userId}
+    </update>
+    <delete id="deleteSelectedUser">
+        delete from userinfo where userId in (${ck})
+    </delete>
+    <select id="getCount" resultType="Integer">
+        select count(*) from userinfo  where 1=1
+        <if test="userName!=null and userName!=''">
+            and userName like concat('%',#{userName},'%')
+        </if>
+        <if test="userPhone!=null and userPhone!=''">
+            and userPhone like concat('%',#{userPhone},'%')
+        </if>
+    </select>
+    <select id="getUserName" resultType="String">
+        select userName from userinfo;
+    </select>
+    <select id="getUserAge" resultType="map">
+        select userAge,count(userAge) from userinfo group by userAge
+    </select>
+</mapper>

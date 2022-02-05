@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+    <mappers>
+        <mapper resource="com/book/dao/AdminMapper.xml"/>
+        <mapper resource="com/book/dao/AdminInfoMapper.xml"/>
+        <mapper resource="com/book/dao/UserInfoMapper.xml"/>
+        <mapper resource="com/book/dao/BookInfoMapper.xml"/>
+        <mapper resource="com/book/dao/BookSortMapper.xml"/>
+        <mapper resource="com/book/dao/AdminTypeMapper.xml"/>
+        <mapper resource="com/book/dao/BookImageMapper.xml"/>
+        <mapper resource="com/book/dao/UserMapper.xml"/>
+        <mapper resource="com/book/dao/CartMapper.xml"/>
+        <mapper resource="com/book/dao/OrderMapper.xml"/>
+    </mappers>
+</configuration>

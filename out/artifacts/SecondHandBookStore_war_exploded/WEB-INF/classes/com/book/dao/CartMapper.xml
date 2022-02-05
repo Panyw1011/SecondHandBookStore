@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.book.dao.CartDao">
+
+    <insert id="addCart">
+        insert into shoppingcart(userId, bookId) values(#{userId},#{bookId})
+    </insert>
+    <select id="getUserCart" resultType="com.book.pojo.Cart">
+        select cart.cartId,cart.bookId,info.bookName,u.userName,img.url,info.bookPrice
+        from shoppingcart cart,bookimage img,bookinfo info ,userinfo u
+        where cart.bookId = info.bookId and cart.bookId = img.bookId and info.userId = u.userId and cart.userId = #{userId}
+    </select>
+    <delete id="deleteSelectedCart">
+        delete from shoppingcart where cartId in (${ck})
+    </delete>
+</mapper>

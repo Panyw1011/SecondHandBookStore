@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.book.dao.AdminInfoDao">
+
+    <select id="findAdminInfoById" parameterType="Integer" resultType="com.book.pojo.AdminInfo">
+        select a1.*,a2.typeName from adminInfo a1,adminType a2 where adminId = #{adminId} and a1.adminTypeId = a2.adminTypeId
+    </select>
+    <select id="getAdminList" resultType="com.book.pojo.AdminInfo">
+        select a1.*,a2.typeName from adminInfo a1,adminType a2  where 1=1
+        <if test="adminName!=null and adminName!=''">
+            and adminName like concat('%',#{adminName},'%')
+        </if>
+        <if test="adminPhone!=null and adminPhone!=''">
+            and adminPhone like concat('%',#{adminPhone},'%')
+        </if>
+        <if test="adminAge!=null and adminAge!=0">
+            and adminAge like concat('%',#{adminAge},'%')
+        </if>
+        <if test="typeName!=null and typeName!=''">
+            and a2.typeName like concat('%',#{typeName},'%')
+        </if>
+        and a1.adminTypeId = a2.adminTypeId order by adminId asc
+    </select>
+    <select id="getCount" resultType="Integer">
+        select count(*) from adminInfo a1,adminType a2  where 1=1
+        <if test="adminName!=null and adminName!=''">
+            and adminName like concat('%',#{adminName},'%')
+        </if>
+        <if test="adminPhone!=null and adminPhone!=''">
+            and adminPhone like concat('%',#{adminPhone},'%')
+        </if>
+        <if test="adminAge!=null and adminAge!=0">
+            and adminAge like concat('%',#{adminAge},'%')
+        </if>
+        <if test="typeName!=null and typeName!=''">
+            and a2.typeName like concat('%',#{typeName},'%')
+        </if>
+        and a1.adminTypeId = a2.adminTypeId
+    </select>
+    <insert id="addAdmin" parameterType="com.book.pojo.AdminInfo">
+        insert into admininfo(adminName, adminPhone, adminCreateTime, adminSex, adminAge)
+        values(#{adminName},#{adminPhone},now(),#{adminSex},#{adminAge})
+    </insert>
+    <delete id="deleteAdmin" parameterType="Integer">
+        delete from admininfo where adminId = #{adminId}
+    </delete>
+    <update id="updateAdmin" parameterType="com.book.pojo.AdminInfo">
+        update admininfo
+        <set>
+            <if test="adminName!=null and adminName!=''">
+                adminName = #{adminName},
+            </if>
+            <if test="adminPhone!=null and adminPhone!=''">
+                adminPhone = #{adminPhone},
+            </if>
+            <if test="adminSex!=null and adminSex!=''">
+                adminSex = #{adminSex},
+            </if>
+            <if test="adminAge!=null and adminAge!=0">
+                adminAge = #{adminAge},
+            </if>
+            <if test="typeName!=null and typeName!=''">
+                adminTypeId = (select adminTypeId from admintype where typeName = #{typeName}),
+            </if>
+        </set>
+        where adminId = #{adminId}
+    </update>
+    <delete id="deleteSelectedAdmin">
+        delete from admininfo where adminId in (${ck})
+    </delete>
+</mapper>
